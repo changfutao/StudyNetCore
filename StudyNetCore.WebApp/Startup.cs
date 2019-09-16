@@ -11,10 +11,25 @@ namespace StudyNetCore.WebApp
 {
     public class Startup
     {
+        /// <summary>
+        /// 向DI注入
+        /// </summary>
+        /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
-        }
+            //向DI注入MVC
+            services.AddMvc()
+                    .SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_2_2);
 
+            //向DI注入Session
+            services.AddSession();
+
+        }
+        /// <summary>
+        /// 中间件配置
+        /// </summary>
+        /// <param name="app"></param>
+        /// <param name="env"></param>
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
@@ -22,7 +37,16 @@ namespace StudyNetCore.WebApp
                 app.UseDeveloperExceptionPage();
             }
 
-       
+            //配置Session中间件
+            app.UseSession();
+
+            //配置MVC中间件
+            app.UseMvc(routes => {
+                routes.MapRoute(
+                    name:"default",
+                    template:"{controller=Home}/{action=Index}/{id?}"
+                    );
+            });
         }
     }
 }
