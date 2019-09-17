@@ -17,7 +17,8 @@ namespace StudyNetCore.WebApp.Controllers
 
         public string GetSession()
         {
-           return HttpContext.Session.GetString("cft");
+           string msg = HttpContext.Session.GetString("cft");
+           return msg;
         }
     }
 }

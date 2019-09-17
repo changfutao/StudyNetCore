@@ -21,8 +21,27 @@ namespace StudyNetCore.WebApp
             services.AddMvc()
                     .SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_2_2);
 
+            services.Configure<CookiePolicyOptions>(options => 
+            {
+                //检查是否应根据此请求评估同意策略,默认是false
+                options.CheckConsentNeeded = context => true;
+                //影响cookie的相同站点属性
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
+
+            services.AddDistributedMemoryCache();
+
             //向DI注入Session
-            services.AddSession();
+            services.AddSession(options => {
+                //会话10秒后过期
+                options.IdleTimeout = TimeSpan.FromSeconds(10);
+                //Cookie客户端不允许读取
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+                //设置Cookie名称
+                options.Cookie.Name = "jack";
+
+            });
 
         }
         /// <summary>
