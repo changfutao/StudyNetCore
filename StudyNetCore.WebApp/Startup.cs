@@ -24,7 +24,8 @@ namespace StudyNetCore.WebApp
             services.Configure<CookiePolicyOptions>(options => 
             {
                 //检查是否应根据此请求评估同意策略,默认是false
-                options.CheckConsentNeeded = context => true;
+                //发布到Window上要设置为false
+                options.CheckConsentNeeded = context => false;
                 //影响cookie的相同站点属性
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
@@ -42,6 +43,8 @@ namespace StudyNetCore.WebApp
                 options.Cookie.Name = "jack";
 
             });
+            //Cache
+            services.AddMemoryCache();
 
         }
         /// <summary>
