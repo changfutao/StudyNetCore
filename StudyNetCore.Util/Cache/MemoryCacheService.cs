@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Caching.Memory;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,18 +8,62 @@ namespace StudyNetCore.Util.Cache
 {
     public class MemoryCacheService : ICacheService
     {
-        public bool Add(string key, object value)
+        private IMemoryCache _cache;
+        public MemoryCacheService(IMemoryCache cache)
+        {
+            _cache = cache;
+        }
+
+        #region 验证缓存项是否存在
+        public bool Exists(string key)
+        {
+            if(key == null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+            return _cache.TryGetValue(key, out object cached);
+        }
+
+        public Task<bool> ExistsAsync(string key)
         {
             throw new NotImplementedException();
+        } 
+        #endregion
+
+        public bool Add(string key, object value)
+        {
+            if(key == null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+            if(value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            _cache.Set(key, value);
+            return Exists(key);
         }
 
         public bool Add(string key, object value, TimeSpan expiresSliding, TimeSpan expiressAbsoulte)
         {
-            throw new NotImplementedException();
+            if (key == null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            _cache.Set(key, value, new MemoryCacheEntryOptions()
+                                        .SetSlidingExpiration(expiresSliding)
+                                        .SetAbsoluteExpiration(expiressAbsoulte)
+            );
+            return Exists(key);
         }
 
         public bool Add(string key, object value, TimeSpan expiresIn, bool isSliding = false)
         {
+            _cache.CreateEntry(key);
             throw new NotImplementedException();
         }
 
@@ -37,15 +82,7 @@ namespace StudyNetCore.Util.Cache
             throw new NotImplementedException();
         }
 
-        public bool Exists(string key)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> ExistsAsync(string key)
-        {
-            throw new NotImplementedException();
-        }
+      
 
         public T Get<T>(string key) where T : class
         {
