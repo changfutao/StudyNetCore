@@ -11,8 +11,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Serialization;
 using NLog.Extensions.Logging;
+using StudyNetCore.WebApp.Entity;
 using StudyNetCore.WebApp.Models;
 using StudyNetCore.WebApp.Serivces;
+using Microsoft.EntityFrameworkCore;
 
 namespace StudyNetCore.WebApp
 {
@@ -94,6 +96,12 @@ namespace StudyNetCore.WebApp
             //#endif
             services.AddTransient<IMailService, CloudMailService>();
             services.Configure<mailSettings>(Configuration.GetSection("mailSettings"));
+
+            //注入EFCore
+            services.AddDbContext<MyContext>(options => 
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+            });
 
         }
         /// <summary>
