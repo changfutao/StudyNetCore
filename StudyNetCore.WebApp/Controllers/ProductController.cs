@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using StudyNetCore.WebApp.Models;
 using StudyNetCore.WebApp.Serivces;
 
@@ -16,21 +17,44 @@ namespace StudyNetCore.WebApp.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
+        private readonly ILogger<ProductController> _logger;
+        private readonly IMailService _mailService;
+
+        public ProductController(
+            ILogger<ProductController> logger,
+            IMailService mailService
+            )
+        {
+            this._logger = logger;
+            this._mailService = mailService;
+        }
         /// <summary>
         /// GetProduct1 Action名  {id} 参数
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [Route("GetProduct1/{id}")]
+        [Route("GetProduct/{id}")]
         [HttpGet]
         public IActionResult GetProduct(int id)
         {
-            var product = ProductService.Current.Products.SingleOrDefault(x => x.Id == id);
-            if (product == null)
+            try
             {
-                return NotFound();
+                var product = ProductService.Current.Products.SingleOrDefault(x => x.Id == id);
+                //int a = 1;
+                //int b = 0;
+                //int c = a / b;
+                if (product == null)
+                {
+                    this._logger.LogInformation($"Id为{id}的产品没有被找到");
+                    return NotFound();
+                }
+                return Ok(product);
             }
-            return Ok(product);
+            catch (Exception ex)
+            {
+                this._logger.LogCritical($"查找Id为{id}的产品时出现了错误", ex);
+                return StatusCode(500, "处理请求的时候发生了错误");
+            }
         }
         [Route("GetAll")]
         [HttpGet]
@@ -69,6 +93,20 @@ namespace StudyNetCore.WebApp.Controllers
             }
 
             return new JsonResult(new { isSuccess =true});
+        }
+        [Route("Delete/{id}")]
+        [HttpDelete]
+        public IActionResult Delete(int id)
+        {
+            var product = ProductService.Current.Products.SingleOrDefault(x => x.Id == id);
+            if(product == null)
+            {
+                return NotFound();
+            }
+
+            ProductService.Current.Products.Remove(product);
+            _mailService.Send("Product Deleted", $"Id为{id}的产品被删除了");
+            return NoContent();
         }
     }
 }
