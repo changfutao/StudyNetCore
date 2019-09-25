@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using StudyNetCore.Util.Cache;
 
 namespace StudyNetCore3.WebAPP
 {
@@ -21,6 +22,12 @@ namespace StudyNetCore3.WebAPP
 
             //引入EFCore
             //services.AddDbContext<>
+
+            //注入HttpContextAccessor
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            //注入Cache
+            services.AddSingleton<ICacheService, MemoryCacheService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -36,6 +43,7 @@ namespace StudyNetCore3.WebAPP
             //端点中间件
             app.UseEndpoints(endpoints => 
             {
+                //此路由配置包含了特性路由
                 endpoints.MapControllerRoute(
                     name:"default",
                     pattern:"{controller=Home}/{action=Index}/{id?}"
