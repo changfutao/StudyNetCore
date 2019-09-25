@@ -8,11 +8,20 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using StudyNetCore.Util.Cache;
+using StudyNetCore3.WebAPP.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace StudyNetCore3.WebAPP
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
+
+        public Startup(IConfiguration configuration)
+        {
+            this.Configuration = configuration;
+        }
         public void ConfigureServices(IServiceCollection services)
         {
             //注入传统的MVC
@@ -21,7 +30,10 @@ namespace StudyNetCore3.WebAPP
             //services.AddControllers();
 
             //引入EFCore
-            //services.AddDbContext<>
+            services.AddDbContext<MyDbContext>(options => 
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+            });
 
             //注入HttpContextAccessor
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
