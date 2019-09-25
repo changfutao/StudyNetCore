@@ -70,7 +70,7 @@ namespace StudyNetCore.WebApp
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddDistributedMemoryCache();
+            //services.AddDistributedMemoryCache();
 
             //向DI注入Session
             services.AddSession(options =>
@@ -85,7 +85,7 @@ namespace StudyNetCore.WebApp
 
             });
             //Cache
-            services.AddMemoryCache();
+            //services.AddMemoryCache();
 
             //#if DEBUG
             //            //DEBUG模式引入这个
