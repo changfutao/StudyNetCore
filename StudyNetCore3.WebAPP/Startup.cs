@@ -40,6 +40,8 @@ namespace StudyNetCore3.WebAPP
 
             //×¢ÈëCache
             services.AddSingleton<ICacheService, MemoryCacheService>();
+
+            services.AddHttpClient();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

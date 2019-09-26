@@ -17,7 +17,7 @@ namespace StudyNetCore.Util.Session
 
         public void SetSession(string key,string value)
         {
-           
+            var a = 1;
         }
     }
 }

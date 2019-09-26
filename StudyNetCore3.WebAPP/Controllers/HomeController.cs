@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using StudyNetCore.Util.Cache;
@@ -10,10 +11,15 @@ namespace StudyNetCore3.WebAPP.Controllers
     public class HomeController : Controller
     {
         private ICacheService _cacheService;
+        private IHttpClientFactory _clientFactory;
 
-        public HomeController(ICacheService cacheService)
+        public HomeController(
+            ICacheService cacheService,
+            IHttpClientFactory clientFactory
+            )
         {
             this._cacheService = cacheService;
+            this._clientFactory = clientFactory;
         }
         public string GetCache()
         {
@@ -39,5 +45,13 @@ namespace StudyNetCore3.WebAPP.Controllers
                 return "缓存失败";
             }
         }
+
+        public async Task<IActionResult> Test()
+        {
+            var client = _clientFactory.CreateClient();
+            var result =await client.GetStringAsync("https://github.com");
+            return Json(result);
+        }
+
     }
 }
