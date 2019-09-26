@@ -9,6 +9,10 @@ namespace StudyNetCore3.WebAPP.Models
 {
     public class Blog
     {
+        public Blog()
+        {
+            Posts = new List<Post>();
+        }
         public int Id { get; set; }
         public string BlogName { get; set; }
         public DateTime CreateTime { get; set; }

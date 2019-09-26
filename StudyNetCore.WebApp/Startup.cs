@@ -15,6 +15,9 @@ using StudyNetCore.WebApp.Entity;
 using StudyNetCore.WebApp.Models;
 using StudyNetCore.WebApp.Serivces;
 using Microsoft.EntityFrameworkCore;
+using StudyNetCore.WebApp.Dto;
+using AutoMapper;
+using System.Reflection;
 
 namespace StudyNetCore.WebApp
 {
@@ -103,6 +106,10 @@ namespace StudyNetCore.WebApp
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
 
+            //注入AutoMapper
+            var assembly= Assembly.Load("StudyNetCore.WebApp");
+            services.AddAutoMapper(assembly);
+
         }
         /// <summary>
         /// Configure方法是asp.net core程序用来具体指定如何处理每个http请求的
@@ -123,6 +130,8 @@ namespace StudyNetCore.WebApp
 
             //配置Session中间件
             app.UseSession();
+
+        
 
             //配置MVC中间件
             app.UseMvc(routes =>

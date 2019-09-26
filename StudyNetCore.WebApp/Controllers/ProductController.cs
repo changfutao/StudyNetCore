@@ -5,8 +5,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using StudyNetCore.WebApp.Entity;
 using StudyNetCore.WebApp.Models;
 using StudyNetCore.WebApp.Serivces;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using AutoMapper;
+using StudyNetCore.WebApp.Dto;
 
 namespace StudyNetCore.WebApp.Controllers
 {
@@ -19,14 +24,20 @@ namespace StudyNetCore.WebApp.Controllers
     {
         private readonly ILogger<ProductController> _logger;
         private readonly IMailService _mailService;
+        private readonly MyContext _myContext;
+        private readonly IMapper _mapper;
 
         public ProductController(
             ILogger<ProductController> logger,
-            IMailService mailService
+            IMailService mailService,
+            MyContext myContext,
+            IMapper mapper
             )
         {
             this._logger = logger;
             this._mailService = mailService;
+            this._myContext = myContext;
+            this._mapper = mapper;
         }
         /// <summary>
         /// GetProduct1 Action名  {id} 参数
@@ -58,10 +69,16 @@ namespace StudyNetCore.WebApp.Controllers
         }
         [Route("GetAll")]
         [HttpGet]
-        public string GetAll()
+        public IActionResult GetAll()
         {
-            return "str";
+            //var products = this._myContext.TProducts.Include(x => x.TMaterials).ToList();
+            //var json = JsonConvert.SerializeObject(products);
+            //return new JsonResult(products);
+            var products = this._myContext.TProducts.Include(x => x.TMaterials).ToList();
+            var productDtos = _mapper.Map<List<TProduct>, List<ProductDto>>(products);
+            return new JsonResult(productDtos);
         }
+
 
         /*
          * FromQuery 接收的是  http://xxx:xx/api/Product/GetList?Id=111&Name=你好
@@ -71,7 +88,7 @@ namespace StudyNetCore.WebApp.Controllers
         [HttpGet]
         public IActionResult GetProductList([FromQuery]Product p)
         {
-            return new JsonResult(new { Id=p.Id,Name=p.Name});
+            return new JsonResult(new { Id = p.Id, Name = p.Name });
         }
         /// <summary>
         /// FromForm  使用form-data
@@ -82,24 +99,24 @@ namespace StudyNetCore.WebApp.Controllers
         [HttpPost]
         public IActionResult AddProduct([FromForm]ProductCreation product)
         {
-            if(product == null)
+            if (product == null)
             {
                 return BadRequest();
             }
 
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            return new JsonResult(new { isSuccess =true});
+            return new JsonResult(new { isSuccess = true });
         }
         [Route("Delete/{id}")]
         [HttpDelete]
         public IActionResult Delete(int id)
         {
             var product = ProductService.Current.Products.SingleOrDefault(x => x.Id == id);
-            if(product == null)
+            if (product == null)
             {
                 return NotFound();
             }
