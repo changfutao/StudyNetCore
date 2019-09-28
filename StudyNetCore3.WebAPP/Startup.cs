@@ -11,6 +11,7 @@ using StudyNetCore.Util.Cache;
 using StudyNetCore3.WebAPP.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using StudyNetCore3.WebAPP.Services;
 
 namespace StudyNetCore3.WebAPP
 {
@@ -35,6 +36,7 @@ namespace StudyNetCore3.WebAPP
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
 
+
             //注入HttpContextAccessor
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
@@ -42,6 +44,24 @@ namespace StudyNetCore3.WebAPP
             services.AddSingleton<ICacheService, MemoryCacheService>();
 
             services.AddHttpClient();
+
+            #region DI
+            //AddTransient 每一次都会生成一个新的
+            //services.AddTransient<IJob, Job>();
+
+            //AddScoped 每一次Http请求都会生成一个新的(作用域生存期服务 (AddScoped) 以每个客户端请求（连接）一次的方式创建)
+            //在中间件内使用有作用域的服务时，请将该服务注入至 Invoke 或 InvokeAsync 方法。 请不要通过构造函数注入进行注入，因为它会强制服务的行为与单一实例类似
+            //services.AddScoped<IJob, Job>();
+
+            //在ASP.NET Core应用生命周期内，只会创建一次
+            services.AddSingleton<IJob, Job>();
+
+            services.AddTransient<IOperationTransient, Operation>();
+            services.AddScoped<IOperationScoped, Operation>();
+            services.AddSingleton<IOperationSingleton, Operation>();
+            services.AddSingleton<IOperationSingletonInstance>(new Operation(Guid.Empty));
+            services.AddTransient<OperationService, OperationService>();
+            #endregion
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
