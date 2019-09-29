@@ -16,7 +16,6 @@ using StudyNetCore.WebApp.Models;
 using StudyNetCore.WebApp.Serivces;
 using Microsoft.EntityFrameworkCore;
 using StudyNetCore.WebApp.Dto;
-using AutoMapper;
 using System.Reflection;
 
 namespace StudyNetCore.WebApp
