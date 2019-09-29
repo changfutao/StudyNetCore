@@ -107,8 +107,8 @@ namespace StudyNetCore.WebApp
             });
 
             //注入AutoMapper
-            var assembly= Assembly.Load("StudyNetCore.WebApp");
-            services.AddAutoMapper(assembly);
+            //var assembly= Assembly.Load("StudyNetCore.WebApp");
+            //services.AddAutoMapper(assembly);
 
         }
         /// <summary>

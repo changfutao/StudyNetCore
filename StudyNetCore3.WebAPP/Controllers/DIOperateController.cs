@@ -13,15 +13,15 @@ namespace StudyNetCore3.WebAPP.Controllers
     [ApiController]
     public class DIOperateController : ControllerBase
     {
-        private IOperationTransient _transient;
-        private IOperationScoped _scope;
-        private IOperationSingleton _singleton;
-        private IJob _job;
-        private IOperationSingletonInstance _instance;
-        private OperationService _operationService;
-        private Service1 _service1;
-        private ISomeService _someService;
-        private Service3 _service3;
+        private readonly IOperationTransient _transient;
+        private readonly IOperationScoped _scope;
+        private readonly IOperationSingleton _singleton;
+        private readonly IJob _job;
+        private readonly IOperationSingletonInstance _instance;
+        private readonly OperationService _operationService;
+        private readonly Service1 _service1;
+        private readonly ISomeService _someService;
+        private readonly Service3 _service3;
 
         public DIOperateController(
             IOperationTransient transient,
