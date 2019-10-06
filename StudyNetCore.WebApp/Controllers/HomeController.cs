@@ -5,12 +5,19 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using StudyNetCore.WebApp.Entity;
 using StudyNetCore.WebApp.Models;
 
 namespace StudyNetCore.WebApp.Controllers
 {
     public class HomeController : Controller
     {
+        private MyContext _myContext;
+
+        public HomeController(MyContext myContext)
+        {
+            this._myContext = myContext;
+        }
         public string Index()
         {
             return "Index";
@@ -36,6 +43,13 @@ namespace StudyNetCore.WebApp.Controllers
                 //var errorMessage=errinfo.ToString();
                 return BadRequest(ModelState);
             }
+            return null;
+        }
+
+        public IActionResult Test()
+        {
+           var list =from p in _myContext.TProducts
+                    select p;
             return null;
         }
     }
