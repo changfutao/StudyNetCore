@@ -10,7 +10,6 @@ using StudyNetCore.WebApp.Models;
 using StudyNetCore.WebApp.Serivces;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using AutoMapper;
 using StudyNetCore.WebApp.Dto;
 
 namespace StudyNetCore.WebApp.Controllers
@@ -25,19 +24,19 @@ namespace StudyNetCore.WebApp.Controllers
         private readonly ILogger<ProductController> _logger;
         private readonly IMailService _mailService;
         private readonly MyContext _myContext;
-        private readonly IMapper _mapper;
+        
 
         public ProductController(
             ILogger<ProductController> logger,
             IMailService mailService,
-            MyContext myContext,
-            IMapper mapper
+            MyContext myContext
+           
             )
         {
             this._logger = logger;
             this._mailService = mailService;
             this._myContext = myContext;
-            this._mapper = mapper;
+         
         }
         /// <summary>
         /// GetProduct1 Action名  {id} 参数
@@ -75,8 +74,8 @@ namespace StudyNetCore.WebApp.Controllers
             //var json = JsonConvert.SerializeObject(products);
             //return new JsonResult(products);
             var products = this._myContext.TProducts.Include(x => x.TMaterials).ToList();
-            var productDtos = _mapper.Map<List<TProduct>, List<ProductDto>>(products);
-            return new JsonResult(productDtos);
+            //var productDtos = _mapper.Map<List<TProduct>, List<ProductDto>>(products);
+            return new JsonResult(products);
         }
 
 

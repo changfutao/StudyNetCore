@@ -12,6 +12,8 @@ using StudyNetCore3.WebAPP.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using StudyNetCore3.WebAPP.Services;
+using StudyNetCore3.WebAPP.Services.DIServices;
+using StudyNetCore3.WebAPP.ViewModels;
 
 namespace StudyNetCore3.WebAPP
 {
@@ -61,6 +63,21 @@ namespace StudyNetCore3.WebAPP
             services.AddSingleton<IOperationSingleton, Operation>();
             services.AddSingleton<IOperationSingletonInstance>(new Operation(Guid.Empty));
             services.AddTransient<OperationService, OperationService>();
+
+            //如果Service1类实现了IDisposable接口,当请求结束以后，容器会调用Dispose方法
+            services.AddScoped<Service1>();
+            services.AddSingleton<Service2>();
+            services.AddSingleton<ISomeService>(sp => new SomeServiceImplementation());
+
+            services.AddSingleton<Service3>(new Service3());
+            services.AddSingleton(new Service3());
+
+            #endregion
+
+            #region Options
+            services.Configure<Theme>(Configuration.GetSection("Theme"));
+            services.Configure<Theme>("ThemeBlue", Configuration.GetSection("Themes:0"));
+            services.Configure<Theme>("ThemeRed", Configuration.GetSection("Themes:1"));
             #endregion
         }
 
