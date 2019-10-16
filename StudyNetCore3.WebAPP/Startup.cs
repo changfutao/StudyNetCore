@@ -28,9 +28,10 @@ namespace StudyNetCore3.WebAPP
         public void ConfigureServices(IServiceCollection services)
         {
             //注入传统的MVC
-            services.AddControllersWithViews();
-            //只是ResfulAPI(不需要Views)
-            //services.AddControllers();
+            //services.AddControllersWithViews();
+
+            //只是ResfulAPI(不需要Views)适应于WebAPI
+            services.AddControllers();
 
             //引入EFCore
             services.AddDbContext<MyDbContext>(options => 
