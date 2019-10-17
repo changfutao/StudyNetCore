@@ -74,5 +74,7 @@ namespace StudyNetCore3.WebAPP.Controllers
             this._service3.SayHi();
             return Ok();
         }
+
+        
     }
 }

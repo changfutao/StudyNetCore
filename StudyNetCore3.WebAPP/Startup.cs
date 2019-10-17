@@ -25,6 +25,10 @@ namespace StudyNetCore3.WebAPP
         {
             this.Configuration = configuration;
         }
+        /// <summary>
+        /// 注入DI容器
+        /// </summary>
+        /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
             //注入传统的MVC
@@ -81,9 +85,15 @@ namespace StudyNetCore3.WebAPP
             services.Configure<Theme>("ThemeRed", Configuration.GetSection("Themes:1"));
             #endregion
         }
-
+        /// <summary>
+        /// Configure方法用于指定应用响应HTTP请求的方式
+        /// 可通过将中间件组件添加到IApplicationBuilder实例来配置请求管道
+        /// </summary>
+        /// <param name="app"></param>
+        /// <param name="env"></param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            //开发环境
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
