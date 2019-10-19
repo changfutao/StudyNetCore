@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using StudyNetCore3.WebAPP.StartupFilters;
 
 namespace StudyNetCore3.WebAPP
 {
@@ -23,6 +24,10 @@ namespace StudyNetCore3.WebAPP
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                })
+                .ConfigureServices(services => 
+                {
+                    services.AddTransient<IStartupFilter, RequestSetOptionsStartupFilter>();
                 });
 
         #region  若要配置服务和请求处理管道,而不使用Startup类
@@ -66,7 +71,7 @@ namespace StudyNetCore3.WebAPP
 
         //                var configValue = config["MyConfigKey"];
         //            });
-        //        }); 
+        //        });
         #endregion
 
     }

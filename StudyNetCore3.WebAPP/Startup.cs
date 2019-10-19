@@ -48,12 +48,12 @@ namespace StudyNetCore3.WebAPP
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             //注入Cache
-            services.AddSingleton<ICacheService, MemoryCacheService>();
+            //services.AddSingleton<ICacheService, MemoryCacheService>();
 
-            services.AddHttpClient();
+            //services.AddHttpClient();
 
             #region DI
-            //AddTransient 每一次都会生成一个新的
+            //AddTransient 每一次都会生成一个新的(每次从服务容器进行请求时创建的,这种生存期适合轻量级、无状态的服务)
             //services.AddTransient<IJob, Job>();
 
             //AddScoped 每一次Http请求都会生成一个新的(作用域生存期服务 (AddScoped) 以每个客户端请求（连接）一次的方式创建)
@@ -62,7 +62,7 @@ namespace StudyNetCore3.WebAPP
 
             //在ASP.NET Core应用生命周期内，只会创建一次
             services.AddSingleton<IJob, Job>();
-
+            //第一个参数是接口，第二个参数是实现这个接口的具体类
             services.AddTransient<IOperationTransient, Operation>();
             services.AddScoped<IOperationScoped, Operation>();
             services.AddSingleton<IOperationSingleton, Operation>();
@@ -77,6 +77,7 @@ namespace StudyNetCore3.WebAPP
             services.AddSingleton<Service3>(new Service3());
             services.AddSingleton(new Service3());
 
+            services.AddTransient<IFly, Fly>();
             #endregion
 
             #region Options

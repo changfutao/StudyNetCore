@@ -22,6 +22,7 @@ namespace StudyNetCore3.WebAPP.Controllers
         private readonly Service1 _service1;
         private readonly ISomeService _someService;
         private readonly Service3 _service3;
+        private readonly IFly _fly;
 
         public DIOperateController(
             IOperationTransient transient,
@@ -32,7 +33,8 @@ namespace StudyNetCore3.WebAPP.Controllers
             OperationService operationService,
             Service1 service1,
             ISomeService someService,
-            Service3 service3
+            Service3 service3,
+            IFly fly
             )
         {
             this._transient = transient;
@@ -44,6 +46,7 @@ namespace StudyNetCore3.WebAPP.Controllers
             this._service1 = service1;
             this._someService = someService;
             this._service3 = service3;
+            this._fly = fly;
         }
         [Route("GetGuid")]
         [HttpGet]
@@ -74,7 +77,13 @@ namespace StudyNetCore3.WebAPP.Controllers
             this._service3.SayHi();
             return Ok();
         }
-
+        [Route("DoFly")]
+        [HttpGet]
+        public IActionResult DoFly()
+        {
+            this._fly.CanFly();
+            return Ok();
+        }
         
     }
 }
