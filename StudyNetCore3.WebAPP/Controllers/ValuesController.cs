@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,14 +20,15 @@ namespace StudyNetCore3.WebAPP.Controllers
         private IOptionsMonitor<Theme> _optionsMonistor;
         private IOptionsSnapshot<Theme> _optionsSnapshot;
         private IConfiguration Configuration;
-
+        private HttpClient _httpClient;
 
         public ValuesController(
             IHttpContextAccessor accessor,
             IOptions<Theme> options,
             IOptionsMonitor<Theme> optionsMonistor,
             IOptionsSnapshot<Theme> optionsSnapshot,
-            IConfiguration configuration
+            IConfiguration configuration,
+            HttpClient httpclient
         )
         {
             this._accessor = accessor;
@@ -34,6 +36,9 @@ namespace StudyNetCore3.WebAPP.Controllers
             this._optionsMonistor = optionsMonistor;
             this._optionsSnapshot = optionsSnapshot;
             this.Configuration = configuration;
+            this._httpClient = httpclient;
+            this._httpClient.BaseAddress = new Uri("http://www.weather.com.cn");
+            this._httpClient.Timeout = TimeSpan.FromSeconds(30);
         }
         public IActionResult Get()
         {
@@ -62,5 +67,15 @@ namespace StudyNetCore3.WebAPP.Controllers
         {
             return new JsonResult(this.Configuration["SearchUrl"]);
         }
+        [Route("GetData")]
+        [HttpGet]
+        public async Task<string> GetData()
+        {
+            var data = await this._httpClient.GetAsync("/data/sk/101010100.html");
+            var result = await data.Content.ReadAsStringAsync();
+            return result;
+        }
+
+
     }
 }

@@ -85,6 +85,10 @@ namespace StudyNetCore3.WebAPP
             services.Configure<Theme>("ThemeBlue", Configuration.GetSection("Themes:0"));
             services.Configure<Theme>("ThemeRed", Configuration.GetSection("Themes:1"));
             #endregion
+
+            #region HttpClient
+            services.AddHttpClient();
+            #endregion
         }
         /// <summary>
         /// Configure方法用于指定应用响应HTTP请求的方式
